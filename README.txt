@@ -89,4 +89,11 @@ They are so cute!
 ---
 
 Notes:
-For generated elements a uuid id is added to allow that specific element to be targetted by CSS
+For generated elements a uuid is added to allow that specific element to be targetted by CSS
+
+TODO:
+1. Add css generation
+2. Add table support
+3. Add tags for automatically bolding, italicizing, and underlining font
+4. Add rudimentary codeblocks
+5. Add support for formatting elements more easily (divs, line breaks, etc.)
