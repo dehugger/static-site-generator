@@ -52,7 +52,7 @@ def block_parser(block):
             link = path.replace('"','')
         else:
             link = '/images/' + path
-        output = '<img id="{uid}" src="{link}" class="{class_name}">{text}</a>'.format(uid=uid, link=link, class_name=class_name, text=text)
+        output = '<img id="{uid}" src="{link}" class="{class_name}">{text}</img>'.format(uid=uid, link=link, class_name=class_name, text=text)
 
     elif control == 'span':
         output = '<span id="{uid}" class="{class_name}">{text}</span>'.format(uid=uid, class_name=class_name, text=text)
