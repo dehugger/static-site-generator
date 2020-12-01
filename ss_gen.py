@@ -2,9 +2,13 @@ import re, sys, os, uuid
 
 global input_folder
 global output_folder
+global css_classes
+global css_elements
 
 input_folder = sys.argv[1]
 output_folder = sys.argv[2]
+css_classes = []
+css_elements = []
 
 class RegularExpressions:
     flags = re.I|re.M|re.U
@@ -42,6 +46,9 @@ def block_parser(block):
     
     if '!' in control:
         control, path = control.split('!')
+
+    if class_name != '' and class_name not in css_classes:
+        css_classes.append(class_name)
 
     if control == 'link':
         if '"' in path:
@@ -87,6 +94,17 @@ def list_parser(l):
     output += '</ul>\n'
     return output
 
+def css_generator():
+    css = ''
+    for i in css_classes:
+        css += '.' + i + ' {\n\n}\n'
+
+    for i in css_elements:
+        css += i + ' {\n\n}\n'
+
+    return css
+
+
 def file_parser(filename):
     with open(filename, 'r') as f:
         if '/' in filename:
@@ -119,6 +137,12 @@ print('Input\n')
 print_dir_tree(input_folder)
 print('\n-----\n')
 
+try:
+    os.mkdir(output_folder + '/images')
+    os.mkdir(output_folder + '/css')
+except:
+    pass
+
 for root, dirs, files in os.walk(input_folder, topdown=True):
     for name in dirs:
         new_dir = str(os.path.join(root,name)).replace(input_folder, output_folder)
@@ -135,6 +159,10 @@ for root, dirs, files in os.walk(input_folder, topdown=True):
             with open(new_file, 'w') as f:
                 html = file_parser(os.path.join(root,name))
                 f.write(html)
+
+with open(output_folder + '/css/style.css', 'w') as f:
+    css = css_generator()
+    f.write(css)
 
 print('Output\n')
 print_dir_tree(output_folder)
