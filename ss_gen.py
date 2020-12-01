@@ -1,5 +1,8 @@
 import re, sys, os, uuid
 
+global input_folder
+global output_folder
+
 input_folder = sys.argv[1]
 output_folder = sys.argv[2]
 
@@ -43,8 +46,10 @@ def block_parser(block):
     if control == 'link':
         if '"' in path:
             link = path.replace('"','')
+            if 'http' not in path:
+                link = 'https://'+link
         else:
-            link = '/' + path.replace('.ss', '.html')
+            link = path.replace('.ss', '.html')
         output = '<a id="{uid}" href="{link}" class="{class_name}">{text}</a>'.format(uid=uid, link=link, class_name=class_name, text=text)
 
     elif control == 'img':
@@ -68,16 +73,17 @@ def block_parser(block):
 def component_parser(component):
     component = component.replace('{','')
     component = component.replace('}','')
-    with open('components/' + component, 'r') as f:
+    with open(input_folder + '/components/' + component, 'r') as f:
         return ss_parser(f.read())
 
 def list_parser(l):
     l = l.replace('_','')
     l = l.replace('_','')
-    items = l.split(',')
+    items = l.split('\n')
     output = '<ul id="{uid}">\n'.format(uid = str(uuid.uuid4()))
     for i in items:
-        output += '<li id="{uid}">{text}</li>\n'.format(uid = str(uuid.uuid4()), text=i)
+        if i != '':
+            output += '<li id="{uid}">{text}</li>\n'.format(uid = str(uuid.uuid4()), text=i)
     output += '</ul>\n'
     return output
 
